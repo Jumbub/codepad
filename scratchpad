@@ -1,0 +1,104 @@
+#!/usr/bin/env zsh
+
+# Constants
+CONFIG_DIR="$HOME/.config/scratchpad"
+TEMPLATES_DIR="`dirname "$0"`/templates"
+NOW="`date "+%x_%X" | tr " " "_" | tr "/" "-"`"
+
+# Setup configuration folder if it doesn't already exist
+if ! [ -e "$CONFIG_DIR" ]
+then
+  mkdir -p "$CONFIG_DIR"
+  echo "LAST_TEMPLATE=''" > "$CONFIG_DIR/last_template"
+  echo "PAD_DIR='$HOME/pad'" > "$CONFIG_DIR/pad_dir"
+fi
+
+# Load configuration options
+source "$CONFIG_DIR/pad_dir"
+source "$CONFIG_DIR/last_template"
+
+# Dynamic constants
+AVAILABLE_TEMPLATES="`ls $TEMPLATES_DIR | grep -v / | tr '\n' ' '`"
+
+if [ "$1" = "new" ]
+then
+
+  TEMPLATE="$2"
+  NAME="$3"
+
+  if [ -z "$TEMPLATE" ] || ! [ -e "$TEMPLATES_DIR/$TEMPLATE" ]
+  then
+    TEMPLATE="$LAST_TEMPLATE"
+  fi
+
+  if [ -z "$TEMPLATE" ] || ! [ -e "$TEMPLATES_DIR/$TEMPLATE" ]
+  then
+    echo "Error: template '$TEMPLATE' does not exist"
+    exit 1
+  fi
+
+  if [ "$NAME" = "" ]
+  then
+    NAME="$NOW"
+  fi
+
+  NAME_DIR="$PAD_DIR/$NAME"
+
+  if [ -e "$NAME_DIR" ]
+  then
+    mv "$NAME_DIR" "$NAME_DIR_$NOW" || exit 1
+  fi
+
+  cp -R "$TEMPLATES_DIR/$TEMPLATE" "$NAME_DIR" || exit 1
+  cp -R "$TEMPLATES_DIR/defaults/*" "$NAME_DIR" || exit 1
+
+  echo "$NAME_DIR"
+
+elif [ "$1" = "clear" ]
+then
+
+  # Move scratchpad to /var/tmp
+  BACKUP_DIR="/var/tmp/scratchpadbks"
+  mkdir -p "$BACKUP_DIR"
+  cd "$BACKUP_DIR"
+  mv "$PAD_DIR" "$NOW"
+
+  mkdir "$PAD_DIR"
+
+  # Delete backups older than 3 days
+  find . -maxdepth 1 -mindepth 1 -mtime +3 -exec rm -r {} +
+
+elif [ "$1" = "help" ]
+then
+
+  echo "NAME
+  scratchpad - templated environments for quickly building something
+
+SYNOPSIS
+  scratchpad new [template] [name]
+  scratchpad help
+
+OPTIONS
+  [template] => $AVAILABLE_TEMPLATES
+
+SEE ALSO
+  Add the following alias to your shell to automatically change into the new scratch.
+
+  function pad {
+    local SCRATCHPAD="$HOME/repos/scratchpad/scratchpad"
+
+    if [ "$1" = "new" ]
+    then
+      cd "`$SCRATCHPAD $@`"
+    else
+      $SCRATCHPAD $@
+    fi
+  }"
+
+else
+
+  echo "Error: unknown command"
+  exit 1
+
+fi
+
