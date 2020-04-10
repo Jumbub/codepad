@@ -6,7 +6,7 @@
 
 ```
 NAME
-  codepad - templated environments for quickly building something
+  codepad - templated environments and utilities for competitive coding
 
 SYNOPSIS
   codepad new [template] [name]
