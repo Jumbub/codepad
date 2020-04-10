@@ -89,7 +89,7 @@ then
 elif [ "$1" = "help" ]
 then
 
-  awk '/NAME/,EOF {print $0}' README.md | head -n -1
+  awk '/NAME/,EOF {print $0}' $CODEPAD_DIR/README.md | head -n -1
 
 else
 
