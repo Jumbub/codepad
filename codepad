@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Constants
-CONFIG_DIR="$HOME/.config/scratchpad"
+CONFIG_DIR="$HOME/.config/codepad"
 TEMPLATES_DIR="`dirname "$0"`/templates"
 NOW="`date "+%x_%X" | tr " " "_" | tr "/" "-"`"
 
@@ -57,8 +57,8 @@ then
 elif [ "$1" = "clear" ]
 then
 
-  # Move scratchpad to /var/tmp
-  BACKUP_DIR="/var/tmp/scratchpadbks"
+  # Move codepad to /var/tmp
+  BACKUP_DIR="/var/tmp/codepadbks"
   mkdir -p "$BACKUP_DIR"
   cd "$BACKUP_DIR"
   mv "$PAD_DIR" "$NOW"
@@ -71,27 +71,27 @@ then
 elif [ "$1" = "help" ]
 then
 
-  echo "NAME
-  scratchpad - templated environments for quickly building something
+  echo -e "NAME
+  codepad - templated environments for quickly building something
 
 SYNOPSIS
-  scratchpad new [template] [name]
-  scratchpad help
+  codepad new [template] [name]
+  codepad help
 
 OPTIONS
   [template] => $AVAILABLE_TEMPLATES
 
 SEE ALSO
-  Add the following alias to your shell to automatically change into the new scratch.
+  Add the following alias to your shell to automatically change into the new code.
 
   function pad {
-    local SCRATCHPAD="$HOME/repos/scratchpad/scratchpad"
+    local CODEPAD=\"\$HOME/repos/codepad/codepad\"
 
-    if [ "$1" = "new" ]
+    if [ \"\$1\" = \"new\" ]
     then
-      cd "`$SCRATCHPAD $@`"
+      cd \"\`\$CODEPAD \$@\`\"
     else
-      $SCRATCHPAD $@
+      \$CODEPAD \$@
     fi
   }"
 

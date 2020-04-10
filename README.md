@@ -1,4 +1,4 @@
-# CC Scratch Pad
+# Code Jam Code Pad
 
 ![coding image](https://miro.medium.com/max/1400/1*5H6STKG7-Mh_VGwHMtohTA.png)
 
@@ -6,26 +6,26 @@
 
 ```
 NAME
-  scratchpad - templated environments for quickly building something
+  codepad - templated environments for quickly building something
 
 SYNOPSIS
-  scratchpad new [template] [name]
-  scratchpad help
+  codepad new [template] [name]
+  codepad help
 
 OPTIONS
-  [template] => nodei
+  [template] => defaults nodei nodeio
 
 SEE ALSO
-  Add the following alias to your shell to automatically change into the new scratch.
+  Add the following alias to your shell to automatically change into the new code.
 
   function pad {
-    local SCRATCHPAD=/home/jamie/repos/scratchpad/scratchpad
+    local CODEPAD="$HOME/repos/codepad/codepad"
 
-    if [ help = new ]
+    if [ "$1" = "new" ]
     then
-      cd
+      cd "`$CODEPAD $@`"
     else
-       help
+      $CODEPAD $@
     fi
   }
 ```
