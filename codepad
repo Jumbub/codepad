@@ -1,8 +1,16 @@
 #!/usr/bin/env zsh
 
+# Colours
+BAD='\033[1;31m'
+GOOD='\033[1;32m'
+NEUTRAL='\033[0;36m'
+INFO='\u001b[33m'
+NONE='\033[0m'
+
 # Constants
+CODEPAD_DIR="`dirname "$0"`"
 CONFIG_DIR="$HOME/.config/codepad"
-TEMPLATES_DIR="`dirname "$0"`/templates"
+TEMPLATES_DIR="$CODEPAD_DIR/templates"
 NOW="`date "+%x_%X" | tr " " "_" | tr "/" "-"`"
 
 # Setup configuration folder if it doesn't already exist
@@ -49,8 +57,8 @@ then
     mv "$NAME_DIR" "$NAME_DIR_$NOW" || exit 1
   fi
 
-  cp -R "$TEMPLATES_DIR/$TEMPLATE" "$NAME_DIR" || exit 1
-  cp -R "$TEMPLATES_DIR/defaults/*" "$NAME_DIR" || exit 1
+  cp -r "$TEMPLATES_DIR/$TEMPLATE" "$NAME_DIR" || exit 1
+  cp -r $TEMPLATES_DIR/defaults/* "$NAME_DIR" || exit 1
 
   echo "$NAME_DIR"
 
@@ -67,6 +75,16 @@ then
 
   # Delete backups older than 3 days
   find . -maxdepth 1 -mindepth 1 -mtime +3 -exec rm -r {} +
+
+elif [ "$1" = "build" ]
+then
+
+  ls in sol.* | entr -c sh -c "time node sol.js < in > out && echo -e '${GOOD}Succesful build!${NONE}'"
+
+elif [ "$1" = "test" ]
+then
+
+  ls expect out | entr -c sh -c "git --no-pager diff expect out && echo -e '${GOOD}Correct answer!${NONE}'"
 
 elif [ "$1" = "help" ]
 then
