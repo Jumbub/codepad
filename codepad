@@ -71,29 +71,7 @@ then
 elif [ "$1" = "help" ]
 then
 
-  echo -e "NAME
-  codepad - templated environments and utilities for competitive coding
-
-SYNOPSIS
-  codepad new [template] [name]
-  codepad help
-
-OPTIONS
-  [template] => $AVAILABLE_TEMPLATES
-
-SEE ALSO
-  Add the following alias to your shell to automatically change into the new code.
-
-  function pad {
-    local CODEPAD=\"\$HOME/repos/codepad/codepad\"
-
-    if [ \"\$1\" = \"new\" ]
-    then
-      cd \"\`\$CODEPAD \$@\`\"
-    else
-      \$CODEPAD \$@
-    fi
-  }"
+  awk '/NAME/,EOF {print $0}' README.md | head -n -1
 
 else
 
